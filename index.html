@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Qi(Emma) Guo" />
+
+<meta name="date" content="2022-12-16" />
+
+<title>BST260 Final Project: Factors Associated with HPV Vaccine Uptake in Young Girls in Uganda and a Prediction Algorithm</title>
+
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/table1-1.0/table1_defaults.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BST260 Final Project</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">BST260 Final Project: Factors Associated
+with HPV Vaccine Uptake in Young Girls in Uganda and a Prediction
+Algorithm</h1>
+<h4 class="author">Qi(Emma) Guo</h4>
+<h4 class="date">2022-12-16</h4>
+
+</div>
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Cervical cancer is the third most common cancer among females
+worldwide with estimated 569,847 new cases and 311,365 deaths in
+2018.(1) The prevalence of cervical cancer varies across the world and
+the burden of cervical cancer is disproportionally placed on low and
+middle income countries. Uganda, the country located in East Africa, has
+one of the heaviest burdens of cervical cancer in the world with nearly
+twice the global average incidence rate.(2) Human papillomavirus (HPV)
+vaccines are considered a primary cost-effective prevention for cervical
+cancer especially among young girls but the vaccine coverage remains
+low. In Uganda, the 2-dose HPV vaccine series are included as part of
+the routine National Expanded Program on Immunization in 2015.(3)</p>
+<p>Previous research has identified multiple factors that are associated
+with HPV vaccine uptake including older age, health insurance coverage,
+healthcare utilization, information from healthcare providers, prior
+vaccination history. Some factors, such as race, income, education and
+socioeconomic status are reported to have mixed effects. (4,5)</p>
+<p>In this project, the data from the household member recode of the
+2016 Uganda Demographic and Health Survey data was used and it includes
+a comprehensive set of variables on individual and family level
+demographic and health related information.(4) With this dataset, this
+project aims to identify factors associated with HPV vaccine uptake
+among girls aged 10-14 and develop a consequent predicative
+algorithm.</p>
+<p>To confirm the feasibility of the study, several exploratory data
+analysis were conducted to explore the heterogeneity between eligible
+girls who received HPV vaccine versus those who did not in certain
+characteristics. Data visualizations were generated to investigate the
+distribution of potential associated factors among the population and
+their relationship with HPV vaccine uptake in simple form. Figure 1 and
+Figure 2 (see Appendix) showed the variations in wealth index across
+different regions in Uganda, both of which might be associated with HPV
+vaccine uptakes and the differential proportions of eligible girls who
+have received HPV vaccine by age and by region. These preliminary
+analysis indicated the potential existence of multiple variables that
+are associated with outcome of interest.</p>
+<p>As the outcome is defined as a binary measure of having received HPV
+vaccine or not, and there are a number of factors that are potentially
+informative, logistic regression incorporating multiple variables was
+the primary analysis. In correspondence to the logistic regression, a
+machine learning model was developed and evaluated using the logistic
+regression.</p>
+</div>
+<div id="resulsts" class="section level2">
+<h2>Resulsts</h2>
+<p>Because the primary aim of this project is to identify factors
+associated with HPV vaccine uptake, which is coded as a binary outcome
+in the dataset, multivariate logistic regression was used as the main
+analysis and summary statistics on all variables included in the model,
+stratified by vaccination status is shown in Table 1. Included girls who
+received HPV vaccines were different from girls who did not in many
+characteristics and most significantly in terms of education, region and
+wealth index that their family belong to. In general, girls who received
+HPV vaccine were older, more likely to come from Northern region, less
+likely to have no education, have mother in the household and come from
+relatively wealthier families. A correlation matrix was produced between
+continuous variables, or categorical variables that can be reasonably
+assumed as continuous (Figure 3). Between any two variable among number
+of household member, education, age and wealth index, no clear strong
+correlation was observed and the highest correlation was between
+education level and wealth index. As correlations can only measure
+linear relationship and fit the best for continuous variables, the
+absence of strong correlation can not rule out the possibility of
+associations. In addition, the correlation matrix did not show evidence
+of co-linearity between individual variables in potential regression
+model.</p>
+<p>The results from the logistic regression model was summarized in
+Table 2. Older age, coming from the Northern region, having receiving
+primary education and being in or above the middle wealth index were all
+associated with higher odds of receiving HPV vaccines (p&lt;0.05). Being
+in a family with over 9 family members is possibly associated with lower
+odds of getting HPV vaccines while having a female household head
+slightly elevated the odds of getting vaccinated. In addition to the
+full model described before, another model with simplified variable list
+was applied as well. All variables that showed significant association
+results (p&lt;0.05) were retained in the model, similar to a backward
+elimination approach and the results were in general in line with the
+previous model. For both models, it’s worth noticing that all the
+coefficients estimated from the models were quite small except for
+intercept, which is not practically meaningful to interpret in this case
+and for having received higher education, which is not a usual scenario
+for girls of this age and has a consequently problematic sample size.
+The small coefficients corresponded to limited magnitude in real effect
+size, which might indicated little individual prediction power if
+included in the prediction algorithm.</p>
+<p>In line with the multivariate logistic regression that was used to
+identify factors associated with HPV vaccine uptake, a generalized
+linear model using binomial distribution, equivalent to logistic
+regression was used to conduct basic machine learning. The dataset was
+randomly divided into a training set and a test and all variables
+incorporated into the fully model was used as individual predictors in
+the algorithm. Because the outcome was defined as a binary outcome, the
+direct output from the model was the probability of receiving HPV
+vaccines and a threshold was needed to change it into dichotomous
+outputs, identical to the observe outcomes. The threshold was decided by
+trying out different cutoff values and the corresponding model accuracy
+were illustrated in Figure 4 and Table 5 respectively. The optimal
+cutoff value given by this methods is 0.4 which generated an accuracy of
+around 0.78. This was not a satisfying overall performance in terms of
+accuracy and further detailed performance were summarized in Table 6
+where using both the optimal threshold 0.4 and the second best threshold
+0.3 were applied in the algorithm. With the optimal threshold of 0.4,
+the model achieved the highest accuracy and a precision/specificity of 0
+while with the cutoff value of 0.3, we regained some specificity. This
+was related with the low prevalence of HPV vaccine uptake in the
+underlying population and this model was still under powered to provide
+useful insights.</p>
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>In general, the logistic regression analysis was relatively
+successfully but it needs to be recognized that the significant p-value
+does not necessarily translate into practical implications as magnitude
+of the effect sizes were small. The prediction model had a moderately
+overall performance but had several problems. The underlying population
+was from the real world so the prevalence of the outcome was highly
+unbalance where the majority of included participants were not
+vaccinated. This implies that by predicting no vaccination for everyone,
+it would still correctly predict the majority, which is what happened in
+the model. If more time were given, models that are more complicated
+than generalized models could be applied and other technique such as
+smoothing or additional pre-processing could be included. In addition,
+the sampling scheme of the of training versus test set could be change
+with regard to the ratio of vaccinated and non-vaccinated
+individuals.</p>
+<p>In conclusion, this project identified several factors that were
+associated with HPV vaccine uptake among girls aged 10-14 in Uganda,
+including age, region, education attainment, family wealth, the role of
+mother in the household. However, these effect size were relatively
+small indicating absence of strong predictive power. This was also shown
+in the prediction model based on logistic regression. Although the
+overall accuracy of the model was acceptable, the predictions were not
+truly informative. Future research should explore a wide range of
+variables such as healthcare utilization, community characteristic and
+health education and adopts more advance technique to improve
+prediction.</p>
+</div>
+<div id="reference" class="section level2">
+<h2>Reference</h2>
+<ol style="list-style-type: decimal">
+<li>Bray F, Ferlay J, Soerjomataram I, Siegel RL, Torre LA, Jemal A.
+Global cancer statistics 2018: GLOBOCAN estimates of incidence and
+mortality worldwide for 36 cancers in 185 countries. CA: A Cancer
+Journal for Clinicians. 2018;68(6):394-424. <a
+href="doi:https://doi.org/10.3322/caac.21492"
+class="uri">doi:https://doi.org/10.3322/caac.21492</a></li>
+<li>Bruni L, Albero G, Serrano B, Mena M, Gómez D, Muñoz J, Bosch FX, de
+Sanjosé S. ICO/IARC Information Centre on HPV and Cancer (HPV
+Information Centre). Human Papillomavirus and Related Diseases in the
+World. Summary Report 17 June 2019. Accessed April 25, 2022. <a
+href="https://hpvcentre.net/statistics/reports/XWX.pdf"
+class="uri">https://hpvcentre.net/statistics/reports/XWX.pdf</a></li>
+<li>Rujumba J, Akugizibwe M, Basta NE, Banura C. Why don’t adolescent
+girls in a rural Uganda district initiate or complete routine 2-dose HPV
+vaccine series: Perspectives of adolescent girls, their caregivers,
+healthcare workers, community health workers and teachers. PLOS ONE.
+2021;16(6):e0253735. <a href="doi:10.1371/journal.pone.0253735"
+class="uri">doi:10.1371/journal.pone.0253735</a></li>
+<li>Kessels SJM, Marshall HS, Watson M, Braunack-Mayer AJ, Reuzel R,
+Tooher RL. Factors associated with HPV vaccine uptake in teenage girls:
+a systematic review. Vaccine. 2012;30(24):3546-3556. <a
+href="doi:10.1016/j.vaccine.2012.03.063"
+class="uri">doi:10.1016/j.vaccine.2012.03.063</a></li>
+<li>Gallagher KE, Kadokura E, Eckert LO, et al. Factors influencing
+completion of multi-dose vaccine schedules in adolescents: a systematic
+review. BMC Public Health. 2016;16(1):172. <a
+href="doi:10.1186/s12889-016-2845-z"
+class="uri">doi:10.1186/s12889-016-2845-z</a></li>
+<li>Data were requested from The Demographic and Health Surveys Program.
+Published July 12, 2021. Accessed Dec 16, 2022. <a
+href="https://www.usaid.gov/what-we-do/global-health/cross-cutting-areas/demographic-"
+class="uri">https://www.usaid.gov/what-we-do/global-health/cross-cutting-areas/demographic-</a>
+and-health-surveys-program</li>
+</ol>
+</div>
+<div id="appendix" class="section level2">
+<h2>Appendix</h2>
+<div id="figure-1.-distribution-of-wealth-index-across-regions"
+class="section level3">
+<h3>Figure 1. Distribution of Wealth Index across Regions</h3>
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+Table 1. Baseline characteristics</p>
+<div class="Rtable1"><table class="Rtable1">
+<thead>
+<tr>
+<th class='rowlabel firstrow lastrow'></th>
+<th class='firstrow lastrow'><span class='stratlabel'>No<br><span class='stratn'>(N=4754)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Yes<br><span class='stratn'>(N=1339)</span></span></th>
+<th class='firstrow lastrow'><span class='stratlabel'>Total<br><span class='stratn'>(N=6093)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class='rowlabel firstrow'>Age</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Mean (SD)</td>
+<td>11.8 (1.41)</td>
+<td>11.9 (1.40)</td>
+<td>11.9 (1.41)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Median [Min, Max]</td>
+<td class='lastrow'>12.0 [10.0, 14.0]</td>
+<td class='lastrow'>12.0 [10.0, 14.0]</td>
+<td class='lastrow'>12.0 [10.0, 14.0]</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Region</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Central</td>
+<td>680 (14.3%)</td>
+<td>174 (13.0%)</td>
+<td>854 (14.0%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Eastern</td>
+<td>1439 (30.3%)</td>
+<td>420 (31.4%)</td>
+<td>1859 (30.5%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Kampala</td>
+<td>166 (3.5%)</td>
+<td>37 (2.8%)</td>
+<td>203 (3.3%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Northern</td>
+<td>1281 (26.9%)</td>
+<td>400 (29.9%)</td>
+<td>1681 (27.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Western</td>
+<td class='lastrow'>1188 (25.0%)</td>
+<td class='lastrow'>308 (23.0%)</td>
+<td class='lastrow'>1496 (24.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Residence</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Urban</td>
+<td>820 (17.2%)</td>
+<td>220 (16.4%)</td>
+<td>1040 (17.1%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Rural</td>
+<td class='lastrow'>3934 (82.8%)</td>
+<td class='lastrow'>1119 (83.6%)</td>
+<td class='lastrow'>5053 (82.9%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Education</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No school</td>
+<td>545 (11.5%)</td>
+<td>98 (7.3%)</td>
+<td>643 (10.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Primary</td>
+<td>4072 (85.7%)</td>
+<td>1206 (90.1%)</td>
+<td>5278 (86.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Secondary</td>
+<td>132 (2.8%)</td>
+<td>35 (2.6%)</td>
+<td>167 (2.7%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Higher</td>
+<td class='lastrow'>5 (0.1%)</td>
+<td class='lastrow'>0 (0%)</td>
+<td class='lastrow'>5 (0.1%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Sex of Household Head</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Male</td>
+<td>3186 (67.0%)</td>
+<td>871 (65.0%)</td>
+<td>4057 (66.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Female</td>
+<td class='lastrow'>1568 (33.0%)</td>
+<td class='lastrow'>468 (35.0%)</td>
+<td class='lastrow'>2036 (33.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Number of Household Members</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'><=5</td>
+<td>1323 (27.8%)</td>
+<td>374 (27.9%)</td>
+<td>1697 (27.9%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>6-7</td>
+<td>1522 (32.0%)</td>
+<td>468 (35.0%)</td>
+<td>1990 (32.7%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>8-9</td>
+<td>1123 (23.6%)</td>
+<td>305 (22.8%)</td>
+<td>1428 (23.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>>9</td>
+<td class='lastrow'>786 (16.5%)</td>
+<td class='lastrow'>192 (14.3%)</td>
+<td class='lastrow'>978 (16.1%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Mother in the Household</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>No</td>
+<td>1625 (34.2%)</td>
+<td>411 (30.7%)</td>
+<td>2036 (33.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Yes</td>
+<td class='lastrow'>3129 (65.8%)</td>
+<td class='lastrow'>928 (69.3%)</td>
+<td class='lastrow'>4057 (66.6%)</td>
+</tr>
+<tr>
+<td class='rowlabel firstrow'>Wealth Index</td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+<td class='firstrow'></td>
+</tr>
+<tr>
+<td class='rowlabel'>Lowest</td>
+<td>1196 (25.2%)</td>
+<td>320 (23.9%)</td>
+<td>1516 (24.9%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Second</td>
+<td>985 (20.7%)</td>
+<td>258 (19.3%)</td>
+<td>1243 (20.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Middle</td>
+<td>984 (20.7%)</td>
+<td>306 (22.9%)</td>
+<td>1290 (21.2%)</td>
+</tr>
+<tr>
+<td class='rowlabel'>Fourth</td>
+<td>915 (19.2%)</td>
+<td>265 (19.8%)</td>
+<td>1180 (19.4%)</td>
+</tr>
+<tr>
+<td class='rowlabel lastrow'>Highest</td>
+<td class='lastrow'>674 (14.2%)</td>
+<td class='lastrow'>190 (14.2%)</td>
+<td class='lastrow'>864 (14.2%)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div style="page-break-after: always;"></div>
+<p>Table 2. Regression Results from the Full Model</p>
+<div id="pgwbwxahza" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#pgwbwxahza .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#pgwbwxahza .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pgwbwxahza .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pgwbwxahza .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pgwbwxahza .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pgwbwxahza .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pgwbwxahza .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pgwbwxahza .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pgwbwxahza .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#pgwbwxahza .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pgwbwxahza .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pgwbwxahza .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pgwbwxahza .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pgwbwxahza .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pgwbwxahza .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#pgwbwxahza .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#pgwbwxahza .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pgwbwxahza .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#pgwbwxahza .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pgwbwxahza .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pgwbwxahza .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pgwbwxahza .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pgwbwxahza .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pgwbwxahza .gt_left {
+  text-align: left;
+}
+
+#pgwbwxahza .gt_center {
+  text-align: center;
+}
+
+#pgwbwxahza .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pgwbwxahza .gt_font_normal {
+  font-weight: normal;
+}
+
+#pgwbwxahza .gt_font_bold {
+  font-weight: bold;
+}
+
+#pgwbwxahza .gt_font_italic {
+  font-style: italic;
+}
+
+#pgwbwxahza .gt_super {
+  font-size: 65%;
+}
+
+#pgwbwxahza .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#pgwbwxahza .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#pgwbwxahza .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#pgwbwxahza .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#pgwbwxahza .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#pgwbwxahza .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#pgwbwxahza .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;OR&lt;/strong&gt;&lt;sup class=&quot;gt_footnote_marks&quot;&gt;1&lt;/sup&gt;"><strong>OR</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;95% CI&lt;/strong&gt;&lt;sup class=&quot;gt_footnote_marks&quot;&gt;1&lt;/sup&gt;"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;p-value&lt;/strong&gt;"><strong>p-value</strong></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">Age</td>
+<td headers="estimate" class="gt_row gt_center">1.07</td>
+<td headers="ci" class="gt_row gt_center">1.02, 1.12</td>
+<td headers="p.value" class="gt_row gt_center">0.004</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Region</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Central</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Eastern</td>
+<td headers="estimate" class="gt_row gt_center">1.20</td>
+<td headers="ci" class="gt_row gt_center">0.98, 1.48</td>
+<td headers="p.value" class="gt_row gt_center">0.078</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Kampala</td>
+<td headers="estimate" class="gt_row gt_center">0.85</td>
+<td headers="ci" class="gt_row gt_center">0.55, 1.29</td>
+<td headers="p.value" class="gt_row gt_center">0.4</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Northern</td>
+<td headers="estimate" class="gt_row gt_center">1.49</td>
+<td headers="ci" class="gt_row gt_center">1.19, 1.87</td>
+<td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Western</td>
+<td headers="estimate" class="gt_row gt_center">1.03</td>
+<td headers="ci" class="gt_row gt_center">0.83, 1.27</td>
+<td headers="p.value" class="gt_row gt_center">0.8</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Residence</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Urban</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Rural</td>
+<td headers="estimate" class="gt_row gt_center">1.06</td>
+<td headers="ci" class="gt_row gt_center">0.87, 1.29</td>
+<td headers="p.value" class="gt_row gt_center">0.6</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Education</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    No school</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Primary</td>
+<td headers="estimate" class="gt_row gt_center">1.75</td>
+<td headers="ci" class="gt_row gt_center">1.39, 2.23</td>
+<td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Secondary</td>
+<td headers="estimate" class="gt_row gt_center">1.46</td>
+<td headers="ci" class="gt_row gt_center">0.92, 2.28</td>
+<td headers="p.value" class="gt_row gt_center">0.10</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Higher</td>
+<td headers="estimate" class="gt_row gt_center">0.00</td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">>0.9</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Number of Household Members</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    &lt;=5</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    6-7</td>
+<td headers="estimate" class="gt_row gt_center">1.05</td>
+<td headers="ci" class="gt_row gt_center">0.90, 1.24</td>
+<td headers="p.value" class="gt_row gt_center">0.5</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    8-9</td>
+<td headers="estimate" class="gt_row gt_center">0.91</td>
+<td headers="ci" class="gt_row gt_center">0.76, 1.09</td>
+<td headers="p.value" class="gt_row gt_center">0.3</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    &gt;9</td>
+<td headers="estimate" class="gt_row gt_center">0.82</td>
+<td headers="ci" class="gt_row gt_center">0.66, 1.00</td>
+<td headers="p.value" class="gt_row gt_center">0.051</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Sex of Household Head</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Male</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Female</td>
+<td headers="estimate" class="gt_row gt_center">1.13</td>
+<td headers="ci" class="gt_row gt_center">0.99, 1.29</td>
+<td headers="p.value" class="gt_row gt_center">0.078</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Wealth Index</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Lowest</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Second</td>
+<td headers="estimate" class="gt_row gt_center">1.04</td>
+<td headers="ci" class="gt_row gt_center">0.86, 1.27</td>
+<td headers="p.value" class="gt_row gt_center">0.7</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Middle</td>
+<td headers="estimate" class="gt_row gt_center">1.31</td>
+<td headers="ci" class="gt_row gt_center">1.07, 1.60</td>
+<td headers="p.value" class="gt_row gt_center">0.009</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Fourth</td>
+<td headers="estimate" class="gt_row gt_center">1.26</td>
+<td headers="ci" class="gt_row gt_center">1.02, 1.55</td>
+<td headers="p.value" class="gt_row gt_center">0.033</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Highest</td>
+<td headers="estimate" class="gt_row gt_center">1.37</td>
+<td headers="ci" class="gt_row gt_center">1.06, 1.77</td>
+<td headers="p.value" class="gt_row gt_center">0.016</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Mother in the Household</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    No</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Yes</td>
+<td headers="estimate" class="gt_row gt_center">1.22</td>
+<td headers="ci" class="gt_row gt_center">1.06, 1.39</td>
+<td headers="p.value" class="gt_row gt_center">0.005</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="4"><sup class="gt_footnote_marks">1</sup> OR = Odds Ratio, CI = Confidence Interval</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<div style="page-break-after: always;"></div>
+<p>Table 3. Regression Results from the simplified Model</p>
+<div id="ixfipkfpqu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#ixfipkfpqu .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ixfipkfpqu .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ixfipkfpqu .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ixfipkfpqu .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ixfipkfpqu .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ixfipkfpqu .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ixfipkfpqu .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ixfipkfpqu .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ixfipkfpqu .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ixfipkfpqu .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ixfipkfpqu .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ixfipkfpqu .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ixfipkfpqu .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ixfipkfpqu .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ixfipkfpqu .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ixfipkfpqu .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ixfipkfpqu .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ixfipkfpqu .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ixfipkfpqu .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ixfipkfpqu .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ixfipkfpqu .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ixfipkfpqu .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ixfipkfpqu .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ixfipkfpqu .gt_left {
+  text-align: left;
+}
+
+#ixfipkfpqu .gt_center {
+  text-align: center;
+}
+
+#ixfipkfpqu .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ixfipkfpqu .gt_font_normal {
+  font-weight: normal;
+}
+
+#ixfipkfpqu .gt_font_bold {
+  font-weight: bold;
+}
+
+#ixfipkfpqu .gt_font_italic {
+  font-style: italic;
+}
+
+#ixfipkfpqu .gt_super {
+  font-size: 65%;
+}
+
+#ixfipkfpqu .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#ixfipkfpqu .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ixfipkfpqu .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ixfipkfpqu .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ixfipkfpqu .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ixfipkfpqu .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ixfipkfpqu .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;Characteristic&lt;/strong&gt;"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;OR&lt;/strong&gt;&lt;sup class=&quot;gt_footnote_marks&quot;&gt;1&lt;/sup&gt;"><strong>OR</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;95% CI&lt;/strong&gt;&lt;sup class=&quot;gt_footnote_marks&quot;&gt;1&lt;/sup&gt;"><strong>95% CI</strong><sup class="gt_footnote_marks">1</sup></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="&lt;strong&gt;p-value&lt;/strong&gt;"><strong>p-value</strong></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">Age</td>
+<td headers="estimate" class="gt_row gt_center">1.06</td>
+<td headers="ci" class="gt_row gt_center">1.02, 1.11</td>
+<td headers="p.value" class="gt_row gt_center">0.006</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Region</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Central</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Eastern</td>
+<td headers="estimate" class="gt_row gt_center">1.18</td>
+<td headers="ci" class="gt_row gt_center">0.97, 1.46</td>
+<td headers="p.value" class="gt_row gt_center">0.11</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Kampala</td>
+<td headers="estimate" class="gt_row gt_center">0.85</td>
+<td headers="ci" class="gt_row gt_center">0.55, 1.27</td>
+<td headers="p.value" class="gt_row gt_center">0.4</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Northern</td>
+<td headers="estimate" class="gt_row gt_center">1.47</td>
+<td headers="ci" class="gt_row gt_center">1.18, 1.84</td>
+<td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Western</td>
+<td headers="estimate" class="gt_row gt_center">1.04</td>
+<td headers="ci" class="gt_row gt_center">0.84, 1.28</td>
+<td headers="p.value" class="gt_row gt_center">0.7</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Education</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    No school</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Primary</td>
+<td headers="estimate" class="gt_row gt_center">1.72</td>
+<td headers="ci" class="gt_row gt_center">1.37, 2.19</td>
+<td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Secondary</td>
+<td headers="estimate" class="gt_row gt_center">1.46</td>
+<td headers="ci" class="gt_row gt_center">0.92, 2.27</td>
+<td headers="p.value" class="gt_row gt_center">0.10</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Higher</td>
+<td headers="estimate" class="gt_row gt_center">0.00</td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center">>0.9</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Wealth Index</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Lowest</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Second</td>
+<td headers="estimate" class="gt_row gt_center">1.02</td>
+<td headers="ci" class="gt_row gt_center">0.83, 1.24</td>
+<td headers="p.value" class="gt_row gt_center">0.9</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Middle</td>
+<td headers="estimate" class="gt_row gt_center">1.26</td>
+<td headers="ci" class="gt_row gt_center">1.03, 1.54</td>
+<td headers="p.value" class="gt_row gt_center">0.023</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Fourth</td>
+<td headers="estimate" class="gt_row gt_center">1.20</td>
+<td headers="ci" class="gt_row gt_center">0.98, 1.48</td>
+<td headers="p.value" class="gt_row gt_center">0.082</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Highest</td>
+<td headers="estimate" class="gt_row gt_center">1.29</td>
+<td headers="ci" class="gt_row gt_center">1.01, 1.64</td>
+<td headers="p.value" class="gt_row gt_center">0.037</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">Mother in the Household</td>
+<td headers="estimate" class="gt_row gt_center"></td>
+<td headers="ci" class="gt_row gt_center"></td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    No</td>
+<td headers="estimate" class="gt_row gt_center">—</td>
+<td headers="ci" class="gt_row gt_center">—</td>
+<td headers="p.value" class="gt_row gt_center"></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">    Yes</td>
+<td headers="estimate" class="gt_row gt_center">1.19</td>
+<td headers="ci" class="gt_row gt_center">1.05, 1.37</td>
+<td headers="p.value" class="gt_row gt_center">0.009</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="4"><sup class="gt_footnote_marks">1</sup> OR = Odds Ratio, CI = Confidence Interval</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
+<div style="page-break-after: always;"></div>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+Table 5. Model Accuracy Using Different Cutoff Values</p>
+<pre><code>##    cutoff  accuracy
+## 1     0.0 0.2198523
+## 2     0.1 0.2214930
+## 3     0.2 0.4325267
+## 4     0.3 0.7493847
+## 5     0.4 0.7801477
+## 6     0.5 0.7801477
+## 7     0.6 0.7801477
+## 8     0.7 0.7801477
+## 9     0.8 0.7801477
+## 10    0.9 0.7801477
+## 11    1.0 0.7801477</code></pre>
+<div style="page-break-after: always;"></div>
+<p>Table 6. Detailed Model Performances</p>
+<pre><code>##   cutoff_df accuracy_df sensitivity_df specificity_df
+## 1       0.3   0.7600657      0.9526316     0.07490637
+## 2       0.4   0.7806081      1.0000000     0.00000000</code></pre>
+<div style="page-break-after: always;"></div>
+<p>All Code for this project:</p>
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE)
+library(haven)
+hpv &lt;- read_dta(&quot;UGPR7BFL.DTA&quot;)
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(ggridges)
+library(boot)
+library(table1)
+library(ggcorrplot)
+library(caret)
+library(gtsummary)
+
+hpv_girl_10_14 &lt;- hpv |&gt; 
+  filter(hv105 &gt;= 10 &amp; hv105 &lt;=14 &amp; hv104 ==2) |&gt; #6528 left
+  filter(sh22 == 0 | sh22 == 1) |&gt; #6093 left 
+  select(sh22, hv105, hv024, hv025, hv122, hv219, hv112, hv009, hv270)
+
+#rename variables
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; rename(hpv_vaccine = sh22, 
+       age = hv105,
+       region = hv024,
+       residence = hv025,
+       education = hv122,
+       household_head_sex = hv219,
+       live_with_mother_in_household = hv112,
+       household_member_number = hv009,
+       wealth_index = hv270)
+
+correlation &lt;- hpv_girl_10_14 |&gt; select(age, education, household_member_number, wealth_index)
+
+#recode 
+#hpv vaccine
+hpv_girl_10_14$hpv_vaccine &lt;- factor(hpv_girl_10_14$hpv_vaccine, levels = c(0,1), labels = c(&quot;No&quot;, &quot;Yes&quot;))
+label(hpv_girl_10_14$hpv_vaccine) &lt;- &quot;HPV Vaccine&quot;
+#age
+hpv_girl_10_14$age &lt;- as.numeric(hpv_girl_10_14$age)
+label(hpv_girl_10_14$age) &lt;- &quot;Age&quot;
+#region
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; mutate(region_cat = case_when(
+  region == 0 ~ &quot;Kampala&quot;,
+  region %in% c(7, 8, 9, 10) ~ &quot;Northern&quot;,
+  region %in% c(3, 4, 5, 6) ~ &quot;Eastern&quot;,
+  region %in% c(11, 12, 13, 14) ~ &quot;Western&quot;,
+  region %in% c(1, 2) ~ &quot;Central&quot;
+))
+hpv_girl_10_14$region_cat &lt;- as.factor(hpv_girl_10_14$region_cat)
+label(hpv_girl_10_14$region_cat) &lt;- &quot;Region&quot;
+#residence
+hpv_girl_10_14$residence &lt;- factor(hpv_girl_10_14$residence, levels = c(1,2), labels = c(&quot;Urban&quot;,&quot;Rural&quot;))
+label(hpv_girl_10_14$residence) &lt;- &quot;Residence&quot;
+#education
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; filter(education %in% c(0,1,2,3))
+hpv_girl_10_14$education_cat &lt;- factor(hpv_girl_10_14$education, levels = c(0,1,2,3), labels = c(&quot;No school&quot;, &quot;Primary&quot;, &quot;Secondary&quot;, &quot;Higher&quot;))
+label(hpv_girl_10_14$education_cat) &lt;- &quot;Education&quot;
+#household sex
+hpv_girl_10_14$household_head_sex &lt;- factor(hpv_girl_10_14$household_head_sex, levels = c(1,2), labels = c(&quot;Male&quot;, &quot;Female&quot;))
+label(hpv_girl_10_14$household_head_sex) &lt;- &quot;Sex of Household Head&quot;
+#living with mother 
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; mutate(live_with_mother_in_household_cat = case_when(
+  live_with_mother_in_household &gt; 0 ~ &quot;Yes&quot;,
+  live_with_mother_in_household == 0 ~ &quot;No&quot;
+))
+hpv_girl_10_14$live_with_mother_in_household_cat &lt;- as.factor(hpv_girl_10_14$live_with_mother_in_household_cat)
+label(hpv_girl_10_14$live_with_mother_in_household_cat) &lt;- &quot;Mother in the Household&quot;
+#household member number 
+hpv_girl_10_14$household_member_number &lt;- as.numeric(hpv_girl_10_14$household_member_number)
+quantile(hpv_girl_10_14$household_member_number, probs = c(0,0.25,0.5,0.75,1))
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; mutate(household_member_number_cat = case_when(
+  household_member_number &lt;= 5 ~ 1,
+  household_member_number %in% c(6, 7) ~ 2,
+  household_member_number %in% c(8, 9) ~ 3,
+  household_member_number &gt; 9 ~ 4
+))
+hpv_girl_10_14$household_member_number_cat &lt;- factor(hpv_girl_10_14$household_member_number_cat, levels = c(1,2,3,4), labels = c(&quot;&lt;=5&quot;,&quot;6-7&quot;,&quot;8-9&quot;, &quot;&gt;9&quot;))
+label(hpv_girl_10_14$household_member_number_cat) &lt;- &quot;Number of Household Members&quot;
+#Wealth Index
+hpv_girl_10_14$wealth_index &lt;- factor(hpv_girl_10_14$wealth_index, levels = c(1,2,3,4,5), labels = c(&quot;Lowest&quot;, &quot;Second&quot;, &quot;Middle&quot;, &quot;Fourth&quot;, &quot;Highest&quot;))
+label(hpv_girl_10_14$wealth_index) &lt;- &quot;Wealth Index&quot;
+#Figure 1
+hpv_girl_10_14 |&gt; 
+  ggplot(aes(as.numeric(wealth_index), region_cat)) + 
+  geom_density_ridges(bandwidth = 1.5) + 
+  xlab(&quot;Wealth Index&quot;) +
+  ylab(&quot;Region&quot;) + 
+  ggtitle(&quot;Figure 1. Distribution of Wealth Index across Regions&quot;)
+#Figure 2
+figure2 &lt;- hpv_girl_10_14 |&gt; group_by(age, region_cat, hpv_vaccine) |&gt; summarize(count=n()) |&gt; as.data.frame()
+figure2 |&gt; ggplot(aes(x = age, y = count, fill = hpv_vaccine)) + 
+  geom_bar(position = &quot;stack&quot;, stat = &quot;identity&quot;) + 
+  facet_grid(. ~ region_cat) + 
+  scale_fill_discrete(name = &quot;HPV Vaccine&quot;, labels = c(&quot;No&quot;, &quot;Yes&quot;)) + 
+  xlab(&quot;Age&quot;) + 
+  ylab(&quot;Count&quot;) + 
+  ggtitle(&quot;Figure 2. Proportions of HPV Vaccine Uptakes by Age and Regions&quot;)
+#Table 1 - Baseline characteristics 
+table1(~ age + region_cat + residence + education_cat + household_head_sex + household_member_number_cat + live_with_mother_in_household_cat + wealth_index | hpv_vaccine, data=hpv_girl_10_14, overall = &quot;Total&quot;)
+library(ggcorrplot)
+model.matrix(~0+., data=correlation) |&gt; cor(use = &quot;pairwise.complete.obs&quot;) |&gt; ggcorrplot(show.diag = F, type = &quot;lower&quot;, lab = TRUE, lab_size = 2) + ggtitle(&quot;Figure 3. Correlation Matrix&quot;)
+#Table 2 - regression results full model 
+model_logistic &lt;- glm(hpv_vaccine ~ age + region_cat + residence + education_cat + household_member_number_cat + household_head_sex + wealth_index + live_with_mother_in_household_cat, family = &quot;binomial&quot;, data = hpv_girl_10_14)
+summary(model_logistic)
+tbl_regression(model_logistic, exponentiate = TRUE)
+#Table 3 - regression results simplified model 
+model_logistic_2 &lt;- glm(hpv_vaccine ~ age + region_cat + education_cat + wealth_index + live_with_mother_in_household_cat, family = &quot;binomial&quot;, data = hpv_girl_10_14)
+summary(model_logistic_2)
+tbl_regression(model_logistic_2, exponentiate = TRUE)
+#turn into a ML dataset 
+set.seed(2604)
+hpv_girl_10_14 &lt;- hpv_girl_10_14[complete.cases(hpv_girl_10_14),]
+y &lt;- hpv_girl_10_14$hpv_vaccine
+test_index &lt;- createDataPartition(y, times = 1, p = 0.8, list = FALSE)
+train_set &lt;- hpv_girl_10_14 |&gt; slice(test_index)
+test_set &lt;- hpv_girl_10_14 |&gt; slice(-test_index)
+
+#fit logistic regression
+fit_glm &lt;- glm(hpv_vaccine ~ age + region_cat + residence + education_cat + live_with_mother_in_household_cat + household_member_number_cat + wealth_index, data = train_set, family = &quot;binomial&quot;)
+p_hat_glm &lt;- predict(fit_glm, test_set, type = &quot;response&quot;)
+
+#Evaluation Matrix
+cutoff &lt;- seq(0, 1, 0.1)
+accuracy &lt;- map_dbl(cutoff, function(x){
+  y_hat &lt;- ifelse(p_hat_glm &gt; x, &quot;Yes&quot;, &quot;No&quot;) |&gt; 
+    factor(levels = levels(test_set$hpv_vaccine))
+  mean(y_hat == train_set$hpv_vaccine)
+})
+
+#Figure 4.
+data.frame(cutoff, accuracy) |&gt; 
+  ggplot(aes(cutoff, accuracy)) + 
+  geom_point() + 
+  geom_line() +
+  xlab(&quot;Cutoff&quot;) +
+  ylab(&quot;Accuracy&quot;) +
+  ggtitle(&quot;Figure 4. Accuray of Predictive Model Using Different Cutoff Values&quot;)
+#Table 5. Model Accuracy Using Different Cutoff Values
+print(data.frame(cutoff, accuracy))
+#Table 6. Model Performance 
+y_hat_glm &lt;-factor(ifelse(p_hat_glm &gt; 0.4, &quot;Yes&quot;, &quot;No&quot;))
+confusionMatrix(y_hat_glm, test_set$hpv_vaccine)$overall[&quot;Accuracy&quot;]
+sensitivity(data = y_hat_glm, reference = test_set$hpv_vaccine)
+specificity(data = y_hat_glm, reference = test_set$hpv_vaccine)
+table(predicted = y_hat_glm, actual = test_set$hpv_vaccine)
+
+y_hat_glm_2 &lt;-factor(ifelse(p_hat_glm &gt; 0.3, &quot;Yes&quot;, &quot;No&quot;))
+confusionMatrix(y_hat_glm_2, test_set$hpv_vaccine)$overall[&quot;Accuracy&quot;]
+sensitivity(data = y_hat_glm_2, reference = test_set$hpv_vaccine)
+specificity(data = y_hat_glm_2, reference = test_set$hpv_vaccine)
+table(predicted = y_hat_glm_2, actual = test_set$hpv_vaccine)
+cutoff_df &lt;- c(0.3, 0.4)
+accuracy_df &lt;- c(0.7600657, 0.7806081)
+sensitivity_df &lt;-c(0.9526316, 1)
+specificity_df &lt;-c(0.07490637, 0)
+print(data.frame(cutoff_df, accuracy_df, sensitivity_df,specificity_df))
+library(tidyverse)
+hpv_girl_10_14 &lt;- hpv |&gt; 
+  filter(hv105 &gt;= 10 &amp; hv105 &lt;=14 &amp; hv104 ==2) |&gt; #6528 left
+  filter(sh22 == 0 | sh22 == 1) |&gt; #6093 left 
+  select(sh22, hv105, hv024, hv025, hv122, hv219, hv112, hv009, hv270)
+
+#rename variables
+library(dplyr)
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; rename(hpv_vaccine = sh22, 
+       age = hv105,
+       region = hv024,
+       residence = hv025,
+       education = hv122,
+       household_head_sex = hv219,
+       live_with_mother_in_household = hv112,
+       household_member_number = hv009,
+       wealth_index = hv270)
+
+correlation &lt;- hpv_girl_10_14 |&gt; select(age, education, household_member_number, wealth_index)
+label(correlation$age) &lt;- &quot;Age&quot;
+label(correlation$education) &lt;- &quot;Education&quot;
+label(correlation$household_member_number) &lt;- &quot;Number of Household Member&quot;
+label(correlation$wealth_index) &lt;- &quot;Wealth Index&quot;
+
+#recode 
+#hpv vaccine
+hpv_girl_10_14$hpv_vaccine &lt;- factor(hpv_girl_10_14$hpv_vaccine, levels = c(0,1), labels = c(&quot;No&quot;, &quot;Yes&quot;))
+label(hpv_girl_10_14$hpv_vaccine) &lt;- &quot;HPV Vaccine&quot;
+#age
+hpv_girl_10_14$age &lt;- as.numeric(hpv_girl_10_14$age)
+label(hpv_girl_10_14$age) &lt;- &quot;Age&quot;
+#region
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; mutate(region_cat = case_when(
+  region == 0 ~ &quot;Kampala&quot;,
+  region %in% c(7, 8, 9, 10) ~ &quot;Northern&quot;,
+  region %in% c(3, 4, 5, 6) ~ &quot;Eastern&quot;,
+  region %in% c(11, 12, 13, 14) ~ &quot;Western&quot;,
+  region %in% c(1, 2) ~ &quot;Central&quot;
+))
+hpv_girl_10_14$region_cat &lt;- as.factor(hpv_girl_10_14$region_cat)
+label(hpv_girl_10_14$region_cat) &lt;- &quot;Region&quot;
+#residence
+hpv_girl_10_14$residence &lt;- factor(hpv_girl_10_14$residence, levels = c(1,2), labels = c(&quot;Urban&quot;,&quot;Rural&quot;))
+label(hpv_girl_10_14$residence) &lt;- &quot;Residence&quot;
+#education
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; filter(education %in% c(0,1,2,3))
+hpv_girl_10_14$education_cat &lt;- factor(hpv_girl_10_14$education, levels = c(0,1,2,3), labels = c(&quot;No school&quot;, &quot;Primary&quot;, &quot;Secondary&quot;, &quot;Higher&quot;))
+label(hpv_girl_10_14$education_cat) &lt;- &quot;Education&quot;
+#household sex
+hpv_girl_10_14$household_head_sex &lt;- factor(hpv_girl_10_14$household_head_sex, levels = c(1,2), labels = c(&quot;Male&quot;, &quot;Female&quot;))
+label(hpv_girl_10_14$household_head_sex) &lt;- &quot;Sex of Household Head&quot;
+#living with mother 
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; mutate(live_with_mother_in_household_cat = case_when(
+  live_with_mother_in_household &gt; 0 ~ &quot;Yes&quot;,
+  live_with_mother_in_household == 0 ~ &quot;No&quot;
+))
+hpv_girl_10_14$live_with_mother_in_household_cat &lt;- as.factor(hpv_girl_10_14$live_with_mother_in_household_cat)
+label(hpv_girl_10_14$live_with_mother_in_household_cat) &lt;- &quot;Mother in the Household&quot;
+#household member number 
+hpv_girl_10_14$household_member_number &lt;- as.numeric(hpv_girl_10_14$household_member_number)
+quantile(hpv_girl_10_14$household_member_number, probs = c(0,0.25,0.5,0.75,1))
+hpv_girl_10_14 &lt;- hpv_girl_10_14 |&gt; mutate(household_member_number_cat = case_when(
+  household_member_number &lt;= 5 ~ 1,
+  household_member_number %in% c(6, 7) ~ 2,
+  household_member_number %in% c(8, 9) ~ 3,
+  household_member_number &gt; 9 ~ 4
+))
+hpv_girl_10_14$household_member_number_cat &lt;- factor(hpv_girl_10_14$household_member_number_cat, levels = c(1,2,3,4), labels = c(&quot;&lt;=5&quot;,&quot;6-7&quot;,&quot;8-9&quot;, &quot;&gt;9&quot;))
+label(hpv_girl_10_14$household_member_number_cat) &lt;- &quot;Number of Household Members&quot;
+#Wealth Index
+hpv_girl_10_14$wealth_index &lt;- factor(hpv_girl_10_14$wealth_index, levels = c(1,2,3,4,5), labels = c(&quot;Lowest&quot;, &quot;Second&quot;, &quot;Middle&quot;, &quot;Fourth&quot;, &quot;Highest&quot;))
+label(hpv_girl_10_14$wealth_index) &lt;- &quot;Wealth Index&quot;
+
+#ggplot 
+library(ggplot2)
+library(ggridges)
+#Figure 1
+hpv_girl_10_14 |&gt; 
+  ggplot(aes(as.numeric(wealth_index), region_cat)) + 
+  geom_density_ridges(bandwidth = 1.5) + 
+  xlab(&quot;Wealth Index&quot;) +
+  ylab(&quot;Region&quot;) + 
+  ggtitle(&quot;Figure 1. Distribution of Wealth Index across Regions&quot;)
+#Figure 2
+figure2 &lt;- hpv_girl_10_14 |&gt; group_by(age, region_cat, hpv_vaccine) |&gt; summarize(count=n()) |&gt; as.data.frame()
+figure2 |&gt; ggplot(aes(x = age, y = count, fill = hpv_vaccine)) + 
+  geom_bar(position = &quot;stack&quot;, stat = &quot;identity&quot;) + 
+  facet_grid(. ~ region_cat) + 
+  scale_fill_discrete(name = &quot;HPV Vaccine&quot;, labels = c(&quot;No&quot;, &quot;Yes&quot;)) + 
+  xlab(&quot;Age&quot;) + 
+  ylab(&quot;Count&quot;) + 
+  ggtitle(&quot;Figure 2. Proportions of HPV Vaccine Uptakes by Age and Regions&quot;)
+
+#Table 1 - Baseline characteristics 
+library(boot)
+library(table1)
+table1(~ age + region_cat + residence + education_cat + household_head_sex + household_member_number_cat + live_with_mother_in_household_cat + wealth_index | hpv_vaccine, data=hpv_girl_10_14, overall = &quot;Total&quot;)
+
+#Figure 3 - Correlation matrix 
+library(ggcorrplot)
+model.matrix(~0+., data=correlation) |&gt; cor(use = &quot;pairwise.complete.obs&quot;) |&gt; ggcorrplot(show.diag = F, type = &quot;lower&quot;, lab = TRUE, lab_size = 2) + ggtitle(&quot;Figure 3. Correlation Matrix of Selected Continuous Variable&quot;)
+
+#logistic regression 
+#Table 2 - regression results full model 
+model_logistic &lt;- glm(hpv_vaccine ~ age + region_cat + residence + education_cat + household_member_number_cat + household_head_sex + wealth_index + live_with_mother_in_household_cat, family = &quot;binomial&quot;, data = hpv_girl_10_14)
+summary(model_logistic)
+#Table 3 - regression results simplified model 
+model_logistic_2 &lt;- glm(hpv_vaccine ~ age + region_cat + education_cat + wealth_index + live_with_mother_in_household_cat, family = &quot;binomial&quot;, data = hpv_girl_10_14)
+summary(model_logistic_2)
+
+#turn into a ML dataset 
+library(caret)
+set.seed(2604)
+hpv_girl_10_14 &lt;- hpv_girl_10_14[complete.cases(hpv_girl_10_14),]
+y &lt;- hpv_girl_10_14$hpv_vaccine
+test_index &lt;- createDataPartition(y, times = 1, p = 0.8, list = FALSE)
+train_set &lt;- hpv_girl_10_14 |&gt; slice(test_index)
+test_set &lt;- hpv_girl_10_14 |&gt; slice(-test_index)
+
+#fit logistic regression
+fit_glm &lt;- glm(hpv_vaccine ~ age + region_cat + residence + education_cat + live_with_mother_in_household_cat + household_member_number_cat + wealth_index, data = train_set, family = &quot;binomial&quot;)
+p_hat_glm &lt;- predict(fit_glm, test_set, type = &quot;response&quot;)
+
+#Evaluation Matrix
+cutoff &lt;- seq(0, 1, 0.1)
+accuracy &lt;- map_dbl(cutoff, function(x){
+  y_hat &lt;- ifelse(p_hat_glm &gt; x, &quot;Yes&quot;, &quot;No&quot;) |&gt; 
+    factor(levels = levels(test_set$hpv_vaccine))
+  mean(y_hat == train_set$hpv_vaccine)
+})
+
+#Figure 4.
+data.frame(cutoff, accuracy) |&gt; 
+  ggplot(aes(cutoff, accuracy)) + 
+  geom_point() + 
+  geom_line() +
+  xlab(&quot;Cutoff&quot;) +
+  ylab(&quot;Accuracy&quot;) +
+  ggtitle(&quot;Figure 4. Accuray of Predictive Model Using Different Cutoff Values&quot;)
+max(accuracy)
+best_cutoff &lt;- cutoff[which.max(accuracy)]
+best_cutoff
+
+#Table 5. Model Accuracy of Different Cutoff Values
+print(data.frame(cutoff, accuracy))
+#Table 6. Model Performance 
+y_hat_glm &lt;-factor(ifelse(p_hat_glm &gt; 0.4, &quot;Yes&quot;, &quot;No&quot;))
+confusionMatrix(y_hat_glm, test_set$hpv_vaccine)$overall[&quot;Accuracy&quot;]
+sensitivity(data = y_hat_glm, reference = test_set$hpv_vaccine)
+specificity(data = y_hat_glm, reference = test_set$hpv_vaccine)
+table(predicted = y_hat_glm, actual = test_set$hpv_vaccine)
+
+y_hat_glm_2 &lt;-factor(ifelse(p_hat_glm &gt; 0.3, &quot;Yes&quot;, &quot;No&quot;))
+confusionMatrix(y_hat_glm_2, test_set$hpv_vaccine)$overall[&quot;Accuracy&quot;]
+sensitivity(data = y_hat_glm_2, reference = test_set$hpv_vaccine)
+specificity(data = y_hat_glm_2, reference = test_set$hpv_vaccine)
+table(predicted = y_hat_glm_2, actual = test_set$hpv_vaccine)
+
+cutoff_df &lt;- c(0.3, 0.4)
+accuracy_df &lt;- c(0.7600657, 0.7806081)
+sensitivity_df &lt;-c(0.9526316, 1)
+specificity_df &lt;-c(0.07490637, 0)
+print(data.frame(cutoff_df, accuracy_df, sensitivity_df,specificity_df))</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

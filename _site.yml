@@ -1,0 +1,7 @@
+name: "BST260 Final Project"
+output_dir: "."
+navbar:
+  title: "BST260 Final Project"
+  left:
+    - text: "Home"
+      href: index.html
